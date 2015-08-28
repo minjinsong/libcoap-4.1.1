@@ -856,6 +856,15 @@ coap_read( coap_context_t *ctx ) {
 #ifdef WITH_POSIX
   bytes_read = recvfrom(ctx->sockfd, buf, sizeof(buf), 0,
 			&src.addr.sa, &src.size);
+
+int looper = 0;
+printf("\nreceived packet=");
+for(looper=0; looper<src.size; looper++)
+{
+printf("%c", buf[looper]);
+}
+printf("\n");
+
 #endif /* WITH_POSIX */
 #ifdef WITH_CONTIKI
   if(uip_newdata()) {
@@ -919,10 +928,8 @@ if (!coap_pdu_parse((unsigned char *)buf, bytes_read, node->pdu)) {
   coap_transaction_id(&node->remote, node->pdu, &node->id);
   coap_insert_node(&ctx->recvqueue, node);
 
-//#ifndef NDEBUG
-#if 1
-//  if (LOG_DEBUG <= coap_get_log_level()) {
-	if(1) {
+#ifndef NDEBUG
+  if (LOG_DEBUG <= coap_get_log_level()) {
 #ifndef INET6_ADDRSTRLEN
 #define INET6_ADDRSTRLEN 40
 #endif
@@ -1287,7 +1294,7 @@ handle_request(coap_context_t *context, coap_queue_t *node) {
   coap_opt_filter_t opt_filter;
   coap_resource_t *resource;
   coap_key_t key;
-
+printf("%s:+++\n", __func__);
   coap_option_filter_clear(opt_filter);
   
   /* try to find the resource from the request URI */
@@ -1385,7 +1392,7 @@ handle_request(coap_context_t *context, coap_queue_t *node) {
 static inline void
 handle_response(coap_context_t *context, 
 		coap_queue_t *sent, coap_queue_t *rcvd) {
-  
+printf("%s:+++\n", __func__);  
   /* Call application-specific reponse handler when available.  If
    * not, we must acknowledge confirmable messages. */
   if (context->response_handler) {
@@ -1471,7 +1478,7 @@ coap_dispatch( coap_context_t *context ) {
       debug("dropped packet with unknown version %u\n", rcvd->pdu->hdr->version);
       goto cleanup;
     }
-//printf("%s:rcvd->pdu->hdr->type=%d\n", __func__, rcvd->pdu->hdr->type);
+printf("%s:rcvd->pdu->hdr->type=%d\n", __func__, rcvd->pdu->hdr->type);
     switch ( rcvd->pdu->hdr->type ) {
     case COAP_MESSAGE_ACK:
       /* find transaction in sendqueue to stop retransmission */
@@ -1536,12 +1543,12 @@ coap_dispatch( coap_context_t *context ) {
      * registered for a request that should be handled locally. */
     if (handle_locally(context, rcvd)) {
       if (COAP_MESSAGE_IS_REQUEST(rcvd->pdu->hdr))
-	handle_request(context, rcvd);
+		handle_request(context, rcvd);
       else if (COAP_MESSAGE_IS_RESPONSE(rcvd->pdu->hdr))
-	handle_response(context, sent, rcvd);
+		handle_response(context, sent, rcvd);
       else {
-	debug("dropped message with invalid code\n");
-	coap_send_message_type(context, &rcvd->remote, rcvd->pdu, 
+		debug("dropped message with invalid code\n");
+		coap_send_message_type(context, &rcvd->remote, rcvd->pdu, 
 				 COAP_MESSAGE_RST);
       }
     }

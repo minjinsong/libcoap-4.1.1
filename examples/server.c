@@ -87,11 +87,12 @@ hnd_get_time(coap_context_t  *ctx, struct coap_resource_t *resource,
 
   /* FIXME: return time, e.g. in human-readable by default and ticks
    * when query ?ticks is given. */
-//printf("%s:wait ...\n", __func__);
-//sleep(1);
-//printf("%s:finished sleep...\n", __func__);
 struct timeval timeStart, timeEnd, timeDiff;
 gettimeofday(&timeStart, NULL);
+//printf("%s:wait ...\n", __func__);
+//usleep(500);
+sleep(2);
+//printf("%s:finished sleep...\n", __func__);
 
 
   /* if my_clock_base was deleted, we pretend to have no such resource */
@@ -408,9 +409,6 @@ main(int argc, char **argv) {
 
   signal(SIGINT, handle_sigint);
 
-
-printf("%s:addr_str=%s, port_str=%s\n", __func__, addr_str, port_str);
-
   while ( !quit ) {
     FD_ZERO(&readfds);
     FD_SET( ctx->sockfd, &readfds );
@@ -433,7 +431,7 @@ printf("%s:addr_str=%s, port_str=%s\n", __func__, addr_str, port_str);
       tv.tv_sec = COAP_RESOURCE_CHECK_TIME;
       timeout = &tv;
     }
-//printf("%s:wait for receive event!\n", __func__);	
+printf("%s:waiting for packet form socket...\n", __func__);	
     result = select( FD_SETSIZE, &readfds, 0, 0, timeout );
 
     if ( result < 0 ) {		/* error */
@@ -441,9 +439,10 @@ printf("%s:addr_str=%s, port_str=%s\n", __func__, addr_str, port_str);
 	perror("select");
     } else if ( result > 0 ) {	/* read from socket */
       if ( FD_ISSET( ctx->sockfd, &readfds ) ) {
+printf("%s:+++\n", __func__);  	
 	coap_read( ctx );	/* read received data */
 	coap_dispatch( ctx );	/* and dispatch PDUs from receivequeue */
-//printf("%s:+++\n", __func__);
+printf("%s:---\n", __func__);
       }
     } else {			/* timeout */
       if (time_resource) {

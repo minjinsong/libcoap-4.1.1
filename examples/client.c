@@ -1169,9 +1169,7 @@ if( timeDiff.tv_usec < 0 )
     timeDiff.tv_sec  = timeDiff.tv_sec  - 1;
     timeDiff.tv_usec = timeDiff.tv_usec + 1000000;
 }
-//printf("%s:---:%ld.%ldsec\n", __func__, old.tv_sec, old.tv_usec);
-//printf("%s:---:%ld.%ldsec\n", __func__, current.tv_sec, current.tv_usec);
-  printf("%s:---:%ld sec %ld usec\n", __func__, timeDiff.tv_sec, timeDiff.tv_usec);
+printf("%s:---:%ld sec %ld usec\n", __func__, timeDiff.tv_sec, timeDiff.tv_usec);
 
 
   close_output();
