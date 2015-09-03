@@ -91,7 +91,7 @@ struct timeval timeStart, timeEnd, timeDiff;
 gettimeofday(&timeStart, NULL);
 //printf("%s:wait ...\n", __func__);
 //usleep(500);
-sleep(2);
+//sleep(2);
 //printf("%s:finished sleep...\n", __func__);
 
 
@@ -306,6 +306,15 @@ init_resources(coap_context_t *ctx) {
   coap_add_attr(r, (unsigned char *)"ct", 2, (unsigned char *)"0", 1, 0);
   coap_add_resource(ctx, r);
 #endif /* WITHOUT_ASYNC */
+
+//#if OEM_DEFINED
+#if 1
+  r = coap_resource_init((unsigned char *)"Minjin", 6, 0);
+  //coap_register_handler(r, COAP_REQUEST_GET, hnd_get_async);
+  coap_add_attr(r, (unsigned char *)"ct", 2, (unsigned char *)"0", 1, 0);
+  coap_add_attr(r, (unsigned char *)"title", 5, (unsigned char *)"\"minin7.song@samsung.com\"", 16, 0);  
+  coap_add_resource(ctx, r);
+#endif //#if OEM_DEFINED
 }
 
 void
@@ -431,7 +440,7 @@ main(int argc, char **argv) {
       tv.tv_sec = COAP_RESOURCE_CHECK_TIME;
       timeout = &tv;
     }
-printf("%s:waiting for packet form socket...\n", __func__);	
+//printf("%s:waiting for packet form socket...\n", __func__);	
     result = select( FD_SETSIZE, &readfds, 0, 0, timeout );
 
     if ( result < 0 ) {		/* error */
@@ -439,10 +448,10 @@ printf("%s:waiting for packet form socket...\n", __func__);
 	perror("select");
     } else if ( result > 0 ) {	/* read from socket */
       if ( FD_ISSET( ctx->sockfd, &readfds ) ) {
-printf("%s:+++\n", __func__);  	
+//printf("%s:+++\n", __func__);  	
 	coap_read( ctx );	/* read received data */
 	coap_dispatch( ctx );	/* and dispatch PDUs from receivequeue */
-printf("%s:---\n", __func__);
+//printf("%s:---\n", __func__);
       }
     } else {			/* timeout */
       if (time_resource) {

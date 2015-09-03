@@ -1294,7 +1294,7 @@ handle_request(coap_context_t *context, coap_queue_t *node) {
   coap_opt_filter_t opt_filter;
   coap_resource_t *resource;
   coap_key_t key;
-printf("%s:+++\n", __func__);
+//printf("%s:+++\n", __func__);
   coap_option_filter_clear(opt_filter);
   
   /* try to find the resource from the request URI */
@@ -1478,7 +1478,7 @@ coap_dispatch( coap_context_t *context ) {
       debug("dropped packet with unknown version %u\n", rcvd->pdu->hdr->version);
       goto cleanup;
     }
-printf("%s:rcvd->pdu->hdr->type=%d\n", __func__, rcvd->pdu->hdr->type);
+//printf("%s:rcvd->pdu->hdr->type=%d\n", __func__, rcvd->pdu->hdr->type);
     switch ( rcvd->pdu->hdr->type ) {
     case COAP_MESSAGE_ACK:
       /* find transaction in sendqueue to stop retransmission */
