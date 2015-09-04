@@ -934,8 +934,9 @@ if (!coap_pdu_parse((unsigned char *)buf, bytes_read, node->pdu)) {
 #define INET6_ADDRSTRLEN 40
 #endif
     unsigned char addr[INET6_ADDRSTRLEN+8];
+
     if (coap_print_addr(&src, addr, INET6_ADDRSTRLEN+8))
-      printf("** received %d bytes from %s:\n", (int)bytes_read, addr);
+      debug("** received %d bytes from %s:\n", (int)bytes_read, addr);
 
     coap_show_pdu( node->pdu );
   }
@@ -1294,7 +1295,7 @@ handle_request(coap_context_t *context, coap_queue_t *node) {
   coap_opt_filter_t opt_filter;
   coap_resource_t *resource;
   coap_key_t key;
-//printf("%s:+++\n", __func__);
+
   coap_option_filter_clear(opt_filter);
   
   /* try to find the resource from the request URI */
@@ -1392,7 +1393,7 @@ handle_request(coap_context_t *context, coap_queue_t *node) {
 static inline void
 handle_response(coap_context_t *context, 
 		coap_queue_t *sent, coap_queue_t *rcvd) {
-printf("%s:+++\n", __func__);  
+  
   /* Call application-specific reponse handler when available.  If
    * not, we must acknowledge confirmable messages. */
   if (context->response_handler) {
@@ -1478,7 +1479,7 @@ coap_dispatch( coap_context_t *context ) {
       debug("dropped packet with unknown version %u\n", rcvd->pdu->hdr->version);
       goto cleanup;
     }
-//printf("%s:rcvd->pdu->hdr->type=%d\n", __func__, rcvd->pdu->hdr->type);
+    
     switch ( rcvd->pdu->hdr->type ) {
     case COAP_MESSAGE_ACK:
       /* find transaction in sendqueue to stop retransmission */

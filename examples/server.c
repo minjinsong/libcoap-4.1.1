@@ -54,7 +54,7 @@ handle_sigint(int signum) {
 }
 
 #define INDEX "This is a test server made with libcoap (see http://libcoap.sf.net)\n" \
-   	      "Copyright (C) 2010--2013 Olaf Bergmann <minjinsong@tzi.org>\n\n"
+   	      "Copyright (C) 2010--2013 Olaf Bergmann <bergmann@tzi.org>\n\n"
 
 void 
 hnd_get_index(coap_context_t  *ctx, struct coap_resource_t *resource, 
